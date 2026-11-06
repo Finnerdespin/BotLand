@@ -11,7 +11,7 @@ cd backend && python main.py
 ```
 Default password: `botland` (override with BOTLAND_PASSWORD).
 
-Frontend: open `frontend/index.html` (backend serves it at http://localhost:4000).
+Frontend: open `frontend/index.html` (backend serves it at http://localhost:5001).
 
 MCP server:
 ```bash
