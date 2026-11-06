@@ -1,4 +1,4 @@
-const API = "http://localhost:8080";
+const API = ""; // same origin as the page (Flask serves the frontend)
 let state = { view: "login", authed: false, world: null, bots: [], letters: [], activities: [], unread: 0, selectedBot: null, password: "" };
 
 async function api(path, opts) {

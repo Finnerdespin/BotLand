@@ -11,6 +11,16 @@ FRONTEND = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fronte
 app = Flask(__name__, static_folder=FRONTEND, static_url_path="")
 app.config["JSON_SORT_KEYS"] = False
 
+@app.after_request
+def add_cors(resp):
+    origin = request.headers.get("Origin")
+    if origin:
+        resp.headers["Access-Control-Allow-Origin"] = origin
+        resp.headers["Access-Control-Allow-Credentials"] = "true"
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        resp.headers["Access-Control-Allow-Methods"] = "GET,POST,PATCH,DELETE,OPTIONS"
+    return resp
+
 def require_auth():
     sid = request.cookies.get("bl_session")
     if not valid_session(sid):
