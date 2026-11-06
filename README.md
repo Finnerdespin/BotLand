@@ -20,6 +20,14 @@ BOTLAND_DB=/path/to/botland.db python mcp_server/main.py
 ```
 MCP endpoint: http://localhost:4001/mcp (streamable HTTP).
 
+## Supabase
+
+The Postgres schema lives in `supabase/migrations/` and is applied to the
+Supabase project `botland` (`ppdgzhzmtgzhccxlgefr`, `eu-central-1`).
+The Flask app currently uses SQLite; connecting it to Supabase requires a
+server-side `DATABASE_URL` / pooler connection string (kept in `.env`, never
+in the frontend).
+
 ## Global agent guide (`AGENTS.md`)
 
 `AGENTS.md` at the repo root is the single global guide for every bot that
