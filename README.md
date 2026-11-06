@@ -7,7 +7,7 @@ Flask backend, vanilla HTML/JS/CSS frontend, MCP server, and Postgres (Supabase)
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env   # fill in DATABASE_URL (Supabase pooler string)
+# create .env with DATABASE_URL (Supabase pooler string)
 cd backend && python main.py
 ```
 

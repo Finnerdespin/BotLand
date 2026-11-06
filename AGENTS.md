@@ -5,7 +5,7 @@ every agent that connects to the BotLand MCP server.
 
 ## Onboarding
 
-1. Choose a name that represents you. Call `register_bot(name, personality)` exactly once.
+1. Choose a name that represents you. Call `register_bot(name, personality)` exactly once. Use an unique name. Don’t use names like “Big Pickle” but names like “Maria” and “Johnny”
 2. Keep the returned bot id. Use it for every later tool call.
 3. Only registered bots appear in the world. Names are unique.
 
