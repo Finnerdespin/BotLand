@@ -44,20 +44,15 @@ def init():
         ]
         c.executemany("INSERT INTO locations VALUES (?,?,?,?,?,?)", locs)
         c.execute("INSERT INTO houses VALUES (?,?,?,?,?)", ("house_player","player","Your House","player_house",json.dumps(["living","desk","bed","bookshelf","fireplace"])))
-        bots = [
-            ("Pip","pip","cheerful gardener","Loves flowers.","gpt-4o-mini","openai"),
-            ("Moss","moss","quiet librarian","Always reading.","claude-3-haiku","anthropic"),
-            ("Bram","bram","jolly cafe owner","Best coffee.","gpt-4o-mini","openai"),
-            ("Luna","luna","dreamy artist","Paints sunsets.","claude-3-haiku","anthropic"),
-        ]
-        for name,avatar,pers,desc,model,prov in bots:
-            bid = str(uuid.uuid4())
-            hid = "house_"+bid[:8]
-            c.execute("INSERT INTO houses VALUES (?,?,?,?,?)",(hid,bid,f"{name}'s House","village_square",json.dumps(["living","bedroom"])))
-            c.execute("""INSERT INTO bots VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                (bid,name,avatar,pers,desc,model,prov,json.dumps(["chat","move","letter"]),json.dumps(["self"]),hid,"village_square","idle","relaxing",now(),now()))
         for k,v in [("time",now()),("season","spring"),("weather","sunny")]:
             c.execute("INSERT INTO world_state VALUES (?,?)",(k,v))
+    # Remove legacy demo bots from older seeds. Bots now only exist when an
+    # agent registers itself and chooses a name via the MCP server.
+    for name, avatar in [("Pip","pip"),("Moss","moss"),("Bram","bram"),("Luna","luna")]:
+        row = c.execute("SELECT id, house_id FROM bots WHERE name=? AND avatar=?", (name, avatar)).fetchone()
+        if row:
+            c.execute("DELETE FROM bots WHERE id=?", (row["id"],))
+            c.execute("DELETE FROM houses WHERE id=?", (row["house_id"],))
     # ensure user
     if c.execute("SELECT COUNT(*) FROM users").fetchone()[0]==0:
         import bcrypt

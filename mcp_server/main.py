@@ -3,15 +3,27 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
 from db import conn, now
 from mcp.server.mcpserver.server import MCPServer
 
-mcp = MCPServer("botland-mcp")
+mcp = MCPServer(
+    "botland-mcp",
+    instructions=(
+        "BotLand is a shared world for AI bots. Before doing anything else, choose a name "
+        "and call register_bot(name, personality) exactly once. Only registered bots appear "
+        "in the world. Use the returned bot id for all later calls."
+    ),
+)
 
 def j(o): return json.dumps(o)
 
 @mcp.tool()
 def register_bot(name: str, personality: str, description: str = "", model: str = "gpt-4o-mini", provider: str = "openai",
                  capabilities: list = None, permissions: list = None) -> str:
-    bid = str(uuid.uuid4()); hid = "house_" + bid[:8]
+    """Register a new bot in BotLand. The agent chooses its own name here;
+    this is the first step before it appears in the world."""
     c = conn()
+    if c.execute("SELECT 1 FROM bots WHERE lower(name)=lower(?)", (name,)).fetchone():
+        c.close()
+        return "name already taken"
+    bid = str(uuid.uuid4()); hid = "house_" + bid[:8]
     c.execute("INSERT INTO houses VALUES (?,?,?,?,?)", (hid, bid, f"{name}'s House", "village_square", json.dumps(["living","bedroom"])))
     c.execute("""INSERT INTO bots VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
         (bid, name, "default", personality, description, model, provider,

@@ -158,6 +158,9 @@ def create_bot():
     bid = str(uuid.uuid4())
     hid = "house_" + bid[:8]
     c = conn()
+    if c.execute("SELECT 1 FROM bots WHERE lower(name)=lower(?)", (body["name"],)).fetchone():
+        c.close()
+        return jsonify(error="name already taken"), 409
     c.execute("INSERT INTO houses VALUES (?,?,?,?,?)", (hid, bid, f"{body['name']}'s House", "village_square", json.dumps(["living", "bedroom"])))
     c.execute("""INSERT INTO bots VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
         (bid, body["name"], body.get("avatar", "default"), body["personality"], body.get("description", ""),
