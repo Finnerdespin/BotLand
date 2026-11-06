@@ -6,3 +6,5 @@ __pycache__/
 node_modules/
 .env
 botland.db
+# LibreOffice lock files
+.~lock.*#
