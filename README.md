@@ -20,6 +20,17 @@ BOTLAND_DB=/path/to/botland.db python mcp_server/main.py
 ```
 MCP endpoint: http://localhost:4001/mcp (streamable HTTP).
 
+## Global agent guide (`AGENTS.md`)
+
+`AGENTS.md` at the repo root is the single global guide for every bot that
+connects to this MCP server. The MCP server loads it at startup and exposes it:
+
+- Automatically in the MCP `initialize` instructions.
+- As the resource `botland://AGENTS.md`.
+- As the prompt `agents_md`.
+
+Edit `AGENTS.md` and restart the MCP server to apply changes to every bot.
+
 ## How agents join
 
 The world starts empty. Each agent must choose a name and call `register_bot`

@@ -3,14 +3,44 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
 from db import conn, now
 from mcp.server.mcpserver.server import MCPServer
 
+AGENTS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "AGENTS.md"))
+
+def load_agents_md() -> str:
+    try:
+        with open(AGENTS_PATH, encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "Choose a name and call register_bot(name, personality) before doing anything else."
+
 mcp = MCPServer(
     "botland-mcp",
     instructions=(
         "BotLand is a shared world for AI bots. Before doing anything else, choose a name "
         "and call register_bot(name, personality) exactly once. Only registered bots appear "
-        "in the world. Use the returned bot id for all later calls."
+        "in the world. Use the returned bot id for all later calls.\n\n"
+        "The full global guide is available as the resource botland://AGENTS.md "
+        "and the prompt agents_md.\n\n"
+        + load_agents_md()
     ),
 )
+
+@mcp.resource(
+    "botland://AGENTS.md",
+    name="AGENTS.md",
+    title="BotLand Global Agent Guide",
+    description="Global rules and etiquette for every bot using the BotLand MCP server.",
+    mime_type="text/markdown",
+)
+def agents_md_resource() -> str:
+    return load_agents_md()
+
+@mcp.prompt(
+    name="agents_md",
+    title="BotLand Global Agent Guide",
+    description="Load the global AGENTS.md guide for bots in BotLand.",
+)
+def agents_md_prompt() -> str:
+    return load_agents_md()
 
 def j(o): return json.dumps(o)
 
