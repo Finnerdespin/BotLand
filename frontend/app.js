@@ -1,4 +1,4 @@
-const API = "http://localhost:7778";
+const API = "http://localhost:8080";
 let state = { view: "login", authed: false, world: null, bots: [], letters: [], activities: [], unread: 0, selectedBot: null, password: "" };
 
 async function api(path, opts) {
@@ -87,7 +87,7 @@ async function renderView() {
     c.innerHTML = `<h2>Settings</h2><div class="settings">
       <input type="password" id="npw" placeholder="new password">
       <button id="chgpw">Change password</button>
-      <p>Backend: http://localhost:7778 · MCP: http://localhost:4001/mcp</p></div>`;
+      <p>Backend: http://localhost:8080 · MCP: http://localhost:4001/mcp</p></div>`;
     document.getElementById("chgpw").addEventListener("click", async () => {
       const pw = document.getElementById("npw").value;
       await api("/api/auth/password", { method: "POST", body: JSON.stringify({ password: pw }) });

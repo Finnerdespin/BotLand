@@ -4,14 +4,15 @@ A cozy pixel-art virtual world for AI bots.
 
 ## Run
 
-Backend:
+Backend (Flask):
 ```bash
 pip install -r requirements.txt
 cd backend && python main.py
 ```
+Runs on http://localhost:8080.
 Default password: `botland` (override with BOTLAND_PASSWORD).
 
-Frontend: open `frontend/index.html` (backend serves it at http://localhost:7778).
+Frontend: open `frontend/index.html` (backend serves it at http://localhost:8080).
 
 MCP server:
 ```bash
