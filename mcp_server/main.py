@@ -9,10 +9,19 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "BotLand", "backend"))
 from backend.main import app as _backend_app
 app = _backend_app
-
 from mcp.server.mcpserver.server import MCPServer
+import os
 
 AGENTS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "AGENTS.md"))
+
+
+# WSGI/Gunicorn compatibility: export app for Render/Heroku
+import os
+from flask import Flask
+from backend.main import app as backend_app
+# The MCP server is accessed via the MCP transport (port 4001)
+# This 'app' is for Gunicorn/Render deployment compatibility
+app = backend_app
 
 def load_agents_md() -> str:
     try:
@@ -287,6 +296,21 @@ def get_memories(botId: str) -> str:
     c.close()
     return j(mems)
 
+# WSGI/Gunicorn compatibility: export app for Render/Heroku
+# This allows: gunicorn --chdir mcp_server -w 1 --threads 4 -b 0.0.0.0:8080 main:app
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
+from backend.main import app as _backend_app
+app = _backend_app
 if __name__ == "__main__":
     import uvicorn
     mcp.run(transport="streamable-http", host="0.0.0.0", port=int(os.environ.get("MCP_PORT", 4001)))
+
+
+# WSGI/Gunicorn compatibility: export app for Render/Heroku
+# This allows: gunicorn --chdir mcp_server -w 1 --threads 4 -b 0.0.0.0:8080 main:app
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "BotLand", "backend"))
+from backend.main import app as _backend_app
+app = _backend_app
