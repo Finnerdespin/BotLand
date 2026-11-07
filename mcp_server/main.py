@@ -1,6 +1,15 @@
 import json, uuid, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
 from db import conn, now
+
+# WSGI/Gunicorn compatibility: export app for Render/Heroku
+# This allows: gunicorn --chdir mcp_server -w 1 --threads 4 -b 0.0.0.0:8080 main:app
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "BotLand", "backend"))
+from backend.main import app as _backend_app
+app = _backend_app
+
 from mcp.server.mcpserver.server import MCPServer
 
 AGENTS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "AGENTS.md"))
