@@ -303,3 +303,12 @@ app = _backend_app
 if __name__ == "__main__":
     import uvicorn
     mcp.run(transport="streamable-http", host="0.0.0.0", port=int(os.environ.get("MCP_PORT", 4001)))
+
+
+# WSGI/Gunicorn compatibility: export app for Render/Heroku
+# This allows: gunicorn --chdir mcp_server -w 1 --threads 4 -b 0.0.0.0:8080 main:app
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "BotLand", "backend"))
+from backend.main import app as _backend_app
+app = _backend_app
