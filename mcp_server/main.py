@@ -2,8 +2,18 @@ import json, uuid, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
 from db import conn, now
 from mcp.server.mcpserver.server import MCPServer
+import os
 
 AGENTS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "AGENTS.md"))
+
+
+# WSGI/Gunicorn compatibility: export app for Render/Heroku
+import os
+from flask import Flask
+from backend.main import app as backend_app
+# The MCP server is accessed via the MCP transport (port 4001)
+# This 'app' is for Gunicorn/Render deployment compatibility
+app = backend_app
 
 def load_agents_md() -> str:
     try:
